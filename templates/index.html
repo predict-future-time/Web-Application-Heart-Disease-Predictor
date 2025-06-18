@@ -1,25 +1,121 @@
-<!-- HTML template -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Heart Attack Prediction</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Attack Risk Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f7f7f7;
+        }
+        h1 {
+            color: #c0392b;
+        }
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px #ccc;
+            max-width: 500px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+        input, select {
+            padding: 8px;
+            width: 100%;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+        .note {
+            font-size: 0.9em;
+            color: #555;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #c0392b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #2980b9;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Heart Attack Risk Predictor</h1>
-        <form method="POST">
-            {% for field in ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca', 'thal'] %}
-                <label>{{ field | capitalize }}</label>
-                <input type="number" step="any" name="{{ field }}" required><br>
-            {% endfor %}
-            <button type="submit">Predict</button>
-        </form>
-        {% if prediction %}
-            <h2>Prediction: {{ prediction }}</h2>
-        {% endif %}
+    <h1>Heart Attack Risk Prediction</h1>
+    <form method="POST" action="/predict">
+        <label>Age:</label>
+        <input type="number" name="age" required>
+        
+        <label>Sex:</label>
+        <select name="sex" required>
+            <option value="1">Male</option>
+            <option value="0">Female</option>
+        </select>
+        <div class="note">1 = Male, 0 = Female</div>
+
+        <label>Chest Pain Type:</label>
+        <select name="cp" required>
+            <option value="0">Typical Angina</option>
+            <option value="1">Atypical Angina</option>
+            <option value="2">Non-Anginal Pain</option>
+            <option value="3">Asymptomatic</option>
+        </select>
+        <div class="note">ATA = 0, NAP = 1, TA = 2, Asymptomatic = 3</div>
+
+        <label>Resting Blood Pressure (mm Hg):</label>
+        <input type="number" name="trestbps" required>
+
+        <label>Cholesterol (mg/dL):</label>
+        <input type="number" name="chol" required>
+
+        <label>Fasting Blood Sugar &gt; 120 mg/dL:</label>
+        <select name="fbs" required>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
+
+        <label>Resting ECG Results:</label>
+        <select name="restecg" required>
+            <option value="0">Normal</option>
+            <option value="1">ST-T Abnormality</option>
+            <option value="2">Left Ventricular Hypertrophy</option>
+        </select>
+
+        <label>Maximum Heart Rate Achieved:</label>
+        <input type="number" name="thalach" required>
+
+        <label>Exercise Induced Angina:</label>
+        <select name="exang" required>
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
+
+        <label>Oldpeak (ST depression):</label>
+        <input type="number" name="oldpeak" step="0.1" required>
+
+        <label>Slope of ST Segment:</label>
+        <select name="slope" required>
+            <option value="0">Upsloping</option>
+            <option value="1">Flat</option>
+            <option value="2">Downsloping</option>
+        </select>
+
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if prediction %}
+    <div class="result">
+        Prediction: {{ prediction }}
     </div>
+    {% endif %}
 </body>
 </html>
